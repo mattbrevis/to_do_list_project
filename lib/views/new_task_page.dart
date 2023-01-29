@@ -27,9 +27,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                 controller: taskDescriptionController,
                 decoration: const InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'Title',
-                    labelStyle: TextStyle(fontSize: 22),
-                    floatingLabelStyle: TextStyle(fontSize: 16),
+                    labelText: 'Title',                    
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 1),
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -50,9 +48,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                 readOnly: false,
                 decoration: const InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'Description',
-                    labelStyle: TextStyle(fontSize: 22),
-                    floatingLabelStyle: TextStyle(fontSize: 16),
+                    labelText: 'Description',                  
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 1),
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -69,11 +65,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
                 height: 25,
               ),
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(border: OutlineInputBorder()),
+
+                decoration: const InputDecoration(label: Text('Status'), border: OutlineInputBorder()),
                 value: statusTask,
                 icon: const Icon(Icons.arrow_downward),
-                elevation: 16,
-                style: const TextStyle(color: Colors.deepPurple),
+                elevation: 16,                
                 onChanged: (String? value) {
                   setState(() {
                     statusTask = value!;
@@ -92,14 +88,12 @@ class _NewTaskPageState extends State<NewTaskPage> {
               ),
               SizedBox(                  
                   width: MediaQuery.of(context).size.width * .8,
-                  child: DateTimePicker(
-                    decoration: const InputDecoration(border: OutlineInputBorder(), floatingLabelAlignment: FloatingLabelAlignment.center),
+                  child: DateTimePicker(                    
+                    decoration: const InputDecoration(label: Text('Validity'),border: OutlineInputBorder()),
                     initialValue: DateTime.now().toString(),
-//                    dateMask: 'dd/MM/yyy',
                     type: DateTimePickerType.date,
                     firstDate: DateTime(2000),
-                    lastDate: DateTime(2020),
-                    fieldLabelText: 'Date',                    
+                    lastDate: DateTime.now(),                    
                     onChanged: (val) {},
                     validator: (val) {
                       return null;
