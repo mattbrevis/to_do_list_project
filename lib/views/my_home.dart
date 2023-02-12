@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_list_project/views/tasks/new_task_page.dart';
+
+
 class MyHomePage extends StatelessWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -16,11 +17,29 @@ class MyHomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * .20,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                    image: AssetImage("assets/images/taskico.png"),
+                  )),
+                ),
                 SizedBox(
                   height: 120,
                   child: ElevatedButton(
-                    onPressed: (() {}),
-                    child: const Text('PENDING TASKS'),
+                    onPressed: (() {
+                      Navigator.pushNamed(context, 'new_task');
+                    }),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                      Text(
+                        'New Task',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      SizedBox(width: 10,),
+                      Icon(Icons.add, size: 35,),
+                    ]),
                   ),
                 ),
                 const SizedBox(
@@ -29,29 +48,29 @@ class MyHomePage extends StatelessWidget {
                 SizedBox(
                   height: 120,
                   child: ElevatedButton(
-                    onPressed: (() {}),
-                    child: const Text('FINISHED TASKS'),
+                    onPressed: (() {
+                      Navigator.pushNamed(context, 'list_task');
+                    }),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const[
+                       Text(
+                          'List Task',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        SizedBox(width: 10,),
+                        Icon(Icons.edit_note_outlined, size: 35,),
+                      ],
+                    ),
+                    
                   ),
+                  
                 ),
                 const SizedBox(
                   height: 10,
-                ),
-                SizedBox(
-                  height: 120,
-                  child: ElevatedButton(
-                    onPressed: (() {}),
-                    child: const Text('IN PROGRESS TASKS'),
-                  ),
                 ),
               ]),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: ((context) => const NewTaskPage())));
-        },
-        child: const Icon(Icons.add_alert_rounded),
       ),
     );
   }

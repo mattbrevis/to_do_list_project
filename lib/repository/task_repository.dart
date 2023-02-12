@@ -19,10 +19,10 @@ class TaskRepository implements ITaskRepository {
   ''';
 
   @override
-  Future<int?> deleteTask(int id) async {
+  Future<int> deleteTask(int id) async {
     final db = await DatabaseProvider.internal().database;
-    var res = db?.delete(TASK_TABLE_NAME, where: "idTask = ?", whereArgs: [id]);
-    return res;
+    var res = await db?.delete(TASK_TABLE_NAME, where: "idTask = ?", whereArgs: [id]);
+    return res?? 0;
   }
 
   @override
@@ -48,10 +48,10 @@ class TaskRepository implements ITaskRepository {
   }
 
   @override
-  Future<int?> updateTask(TaskModel taskModel) async {
+  Future<int> updateTask(TaskModel taskModel) async {
     final db = await DatabaseProvider.internal().database;
     var res = await db?.update(TASK_TABLE_NAME, taskModel.toMap(),
         where: "idTask = ?", whereArgs: [taskModel.idTask]);
-    return res;
+    return res??0;
   }
 }

@@ -1,23 +1,69 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+
 import 'package:to_do_list_project/constants/status_task.dart';
 import 'package:to_do_list_project/model/task_model.dart';
 import 'package:to_do_list_project/repository/task_repository.dart';
 
-class NewTaskPage extends StatefulWidget {
-  const NewTaskPage({super.key});
+class TaskPage extends StatefulWidget {
+  final TaskModel? task;
+  const TaskPage({
+    Key? key,
+    required this.task,
+  }) : super(key: key);
 
   @override
-  State<NewTaskPage> createState() => _NewTaskPageState();
+  State<TaskPage> createState() => _TaskPageState();
 }
 
-class _NewTaskPageState extends State<NewTaskPage> {
+class _TaskPageState extends State<TaskPage> {
   final formKey = GlobalKey<FormState>();
   final taskDescriptionController = TextEditingController();
   final titleTaskController = TextEditingController();
   bool isSaving = false;
   int i = 0;
-  String titleStatusTask = statusTask.first;
+  String titleStatusTask = '';
+  
+  void newTask(TaskModel taskModel) async {
+    await TaskRepository().newTask(taskModel).then((value) {
+      if (value > 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('New task saved!')),
+        );
+        Navigator.pop(context);
+      }
+    });
+  }
+
+  void editTask(TaskModel taskModel) async{
+    await TaskRepository().updateTask(taskModel).then((value) {
+      if (value > 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('New task saved!')),
+        );
+        Navigator.pop(context);
+      }
+    });
+  }
+
+  void loadTask(){
+    if(widget.task != null){
+      titleTaskController.text = widget.task!.titleTask.toUpperCase();
+      taskDescriptionController.text = widget.task!.descriptionTask.toString();
+      titleStatusTask = statusTask[widget.task!.status];
+    }else{
+      titleStatusTask = statusTask.first;
+    }   
+  }
+
+  @override
+  void initState() {
+    
+    super.initState();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +123,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                   decoration: const InputDecoration(
                       label: Text('Status'), border: OutlineInputBorder()),
                   value: titleStatusTask,
+                  
                   icon: const Icon(Icons.arrow_downward),
                   onChanged: (String? value) {
                     setState(() {
@@ -125,35 +172,29 @@ class _NewTaskPageState extends State<NewTaskPage> {
           ),
         ),
       ),
-      appBar: AppBar(title: const Text('Nova Task')),
-      floatingActionButton: FloatingActionButton(
-          onPressed: isSaving == true
-              ? null
-              : () async {
-                  setState(() {
-                    isSaving = true;
-                  });
-                  if (formKey.currentState!.validate()) {
-                    final newTask = TaskModel(
-                        titleTask: titleTaskController.text,
-                        descriptionTask: taskDescriptionController.text,
-                        status: i);
-                    await TaskRepository().newTask(newTask).then((value) {
-                      if (value > 0) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('New task saved!')),
-                        );
-
-                        Navigator.pop(context);
-                      }
+      appBar: AppBar(title: const Text('Nova Task',)),
+      bottomNavigationBar: SizedBox(
+        width: MediaQuery.of(context).size.width * .85,
+        height: 50,
+        child: ElevatedButton(onPressed: isSaving == true
+                ? null
+                : () async {
+                    setState(() {
+                      isSaving = true;
                     });
-                  }
-
-                  setState(() {
-                    isSaving = false;
-                  });
-                },
-          child: isSaving == false ? const Icon(Icons.add) : null),
+                    if (formKey.currentState!.validate()) {
+                      final taskModel = TaskModel(
+                          titleTask: titleTaskController.text,
+                          descriptionTask: taskDescriptionController.text,
+                          status: i);
+                      newTask(taskModel);
+                    }
+                    setState(() {
+                      isSaving = false;
+                    });
+                  }, child: const Text('Nova task')),
+      ),
+     
     );
   }
 }

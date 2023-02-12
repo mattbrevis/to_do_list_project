@@ -4,6 +4,6 @@ import 'package:to_do_list_project/views/tasks/new_task_page.dart';
 
 final myRoutes ={ 
   'home' : (context) => const MyHomePage(),
-  'new_task' : (context)=> const NewTaskPage(),
+  'new_task' : (context)=> const TaskPage(task: null,),
   'list_task' : (context)=> const ListTaskPage()
 };

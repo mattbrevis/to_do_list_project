@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_list_project/views/routes.dart';
+import 'package:to_do_list_project/constants/color_theme.dart';
+import 'package:to_do_list_project/constants/routes.dart';
 
 import 'my_home.dart';
 
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(      
       title: 'To do List Project',    
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+        primarySwatch: darkBlue,
       ),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
