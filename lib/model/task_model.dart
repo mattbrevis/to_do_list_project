@@ -1,13 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
 
 class TaskModel {
   int? idTask;
+   String titleTask;
   String descriptionTask;
   int status; //-PENDING 1-FINISHED - 2-IN PROGRESS
 
   TaskModel({
     this.idTask,
+    required this.titleTask,
     required this.descriptionTask,
     required this.status,
   });
@@ -15,6 +16,7 @@ class TaskModel {
   Map<String, dynamic> toMap() {
     return {
       'idTask': idTask,
+      'titleTask': titleTask,
       'descriptionTask': descriptionTask,
       'status': status,
     };
@@ -22,6 +24,7 @@ class TaskModel {
 
   Map<String, dynamic> newTasktoMap() {
     return {
+      'titleTask': titleTask,
       'descriptionTask': descriptionTask,
       'status': status,
     };
@@ -31,6 +34,7 @@ class TaskModel {
     return TaskModel(
       idTask: map['idTask'],
       descriptionTask: map['descriptionTask'],
+      titleTask: map['titleTask'],
       status: map['status'],
     );
   }

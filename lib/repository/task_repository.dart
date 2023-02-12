@@ -12,6 +12,7 @@ class TaskRepository implements ITaskRepository {
     CREATE TABLE IF NOT EXISTS $TASK_TABLE_NAME 
     (
       idTask INTEGER PRIMARY KEY,
+      titleTask TEXT,
       descriptionTask TEXT,
       status INTEGER
     )
@@ -40,10 +41,10 @@ class TaskRepository implements ITaskRepository {
   }
 
   @override
-  Future<int?> newTask(TaskModel taskModel) async {
+  Future<int> newTask(TaskModel taskModel) async {
     final db = await DatabaseProvider.internal().database;
     var res = await db?.insert(TASK_TABLE_NAME, taskModel.newTasktoMap());
-    return res;
+    return res??0;
   }
 
   @override

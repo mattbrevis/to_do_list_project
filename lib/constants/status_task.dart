@@ -1,0 +1,1 @@
+const statusTask = ['PENDING', 'FINISHED', 'IN PROGRESS']; 
