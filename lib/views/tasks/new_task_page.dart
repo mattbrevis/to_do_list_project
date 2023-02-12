@@ -55,11 +55,14 @@ class _TaskPageState extends State<TaskPage> {
     }else{
       titleStatusTask = statusTask.first;
     }   
+    setState(() {
+      
+    });
   }
 
   @override
   void initState() {
-    
+    loadTask();
     super.initState();
   }
 
