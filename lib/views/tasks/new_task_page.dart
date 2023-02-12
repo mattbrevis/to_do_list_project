@@ -12,7 +12,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
   @override
   Widget build(BuildContext context) {
     final taskDescriptionController = TextEditingController();
-    final listStatusTask = ['PENDING', 'FINISHED', 'IN PROGRESS', 'CANCELLED'];    
+    final listStatusTask = ['PENDING', 'FINISHED', 'IN PROGRESS'];    
 
     String statusTask = listStatusTask.first;
     return Scaffold(
