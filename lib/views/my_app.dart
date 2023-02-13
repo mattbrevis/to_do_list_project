@@ -10,8 +10,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(      
       title: 'To do List Project',    
-      theme: ThemeData(
+      theme: ThemeData(        
         primarySwatch: darkBlue,
+        elevatedButtonTheme: ElevatedButtonThemeData(style: ButtonStyle(shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.0),
+            )) )),
       ),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),

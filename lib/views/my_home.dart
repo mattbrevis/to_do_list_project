@@ -7,15 +7,23 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.indigo,
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Colors.indigo,
+                Colors.indigoAccent,
+                Colors.white                
+              ],
+            )
+          ),        
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Container(
             height: MediaQuery.of(context).size.height * .30,
             decoration: const BoxDecoration(
-                image: DecorationImage(
-              fit: BoxFit.fitHeight,
-              filterQuality: FilterQuality.high,
-              isAntiAlias: true,
+              image: DecorationImage(                            
+              fit: BoxFit.contain,                            
               image: AssetImage("assets/images/taskhome.png"),
             )),
           ),

@@ -41,7 +41,7 @@ class _TaskPageState extends State<TaskPage> {
     await TaskRepository().updateTask(taskModel).then((value) {
       if (value > 0) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('New task saved!')),
+          const SnackBar(content: Text('Task edited!')),
         );
         Navigator.pop(context);
       }
@@ -59,6 +59,20 @@ class _TaskPageState extends State<TaskPage> {
     setState(() {});
   }
 
+  void deleteTask(int idTask) async {
+    await TaskRepository().deleteTask(idTask).then((value) {
+      if (value > 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Task deleted.')),);
+            Navigator.pop(context);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Error deleting task.')),
+            );
+          }
+          });    
+  }
+
   @override
   void initState() {
     loadTask();
@@ -68,31 +82,40 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.all(30),
-          child: Form(
-          key: formKey,
-          child: Column(              
+      body: Form(
+        key: formKey,
+        child: Container(
+          margin: const EdgeInsets.all(10),
+          child: Column(
             children: [
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 50,
+              ),
               Container(
-                  height: MediaQuery.of(context).size.height * .10,
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                    image: AssetImage("assets/images/taskico.png"),
-                  )),
-                ),              
-              const SizedBox(height: 10,),
+                height: MediaQuery.of(context).size.height * .10,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                  image: AssetImage("assets/images/taskico.png"),
+                )),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                widget.task == null ? 'Create a new task' : 'Edit your task',
+                style: const TextStyle(fontSize: 30),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
               TextFormField(
                 readOnly: false,
                 controller: titleTaskController,
-                textInputAction: TextInputAction.next,                            
-
+                textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(
                     labelStyle: TextStyle(fontSize: 18),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,                                                                  
-                    
-                    hintText: 'Title',
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    label: Text('Title'),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 1),
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -115,7 +138,7 @@ class _TaskPageState extends State<TaskPage> {
                 decoration: const InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     labelText: 'Description',
-                      labelStyle: TextStyle(fontSize: 18),
+                    labelStyle: TextStyle(fontSize: 18),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 1),
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -133,16 +156,13 @@ class _TaskPageState extends State<TaskPage> {
               ),
               SizedBox(
                 child: DropdownButtonFormField<String>(
-                  
                   decoration: const InputDecoration(
-                    labelStyle: TextStyle(fontSize: 18),
-                    
-                      label: Text('Status'), border: OutlineInputBorder()),
+                      labelStyle: TextStyle(fontSize: 18),
+                      label: Text('Status'),
+                      border: OutlineInputBorder()),
                   value: titleStatusTask,
                   icon: const Icon(Icons.arrow_downward),
                   alignment: AlignmentDirectional.centerStart,
-                                      
-                  
                   onChanged: (String? value) {
                     setState(() {
                       titleStatusTask = value!;
@@ -190,14 +210,47 @@ class _TaskPageState extends State<TaskPage> {
           ),
         ),
       ),
-      appBar: AppBar(
-          title: Text(
-        widget.task == null ? 'New Task' : 'Edit task',
-      )),
-      bottomNavigationBar: SizedBox(
-        width: MediaQuery.of(context).size.width * .80,
+      floatingActionButton: Visibility(
+          visible: widget.task != null,
+          child: FloatingActionButton(
+            backgroundColor: Colors.red,
+            child: const Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Delete task"),
+                    content: const Text("Would you like to delete this task?"),
+                    actions: [
+                      ElevatedButton(
+                        child: const Text("Cancel"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      ElevatedButton(
+                        child: const Text("Yes"),
+                        onPressed: () {
+                          deleteTask(widget.task!.idTask!);
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          )),
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.all(20),
+        width: MediaQuery.of(context).size.width * .85,
         height: 50,
         child: ElevatedButton(
+           
             onPressed: isSaving == true
                 ? null
                 : () async {
