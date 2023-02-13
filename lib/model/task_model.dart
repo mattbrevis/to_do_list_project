@@ -1,17 +1,41 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 
 class TaskModel {
-  int idTask;
+  int? idTask;
+   String titleTask;
   String descriptionTask;
-  String status;     //-PENDING 1-FINISHED - 2-IN PROGRESS 3-CANCELLED
-  String dateCreation;
-  String? dateValidation;
-  
+  int status; //-PENDING 1-FINISHED - 2-IN PROGRESS
+
   TaskModel({
-    required this.idTask,
+    this.idTask,
+    required this.titleTask,
     required this.descriptionTask,
     required this.status,
-    required this.dateCreation,
-    this.dateValidation,
   });
-  
+
+  Map<String, dynamic> toMap() {
+    return {
+      'idTask': idTask,
+      'titleTask': titleTask,
+      'descriptionTask': descriptionTask,
+      'status': status,
+    };
+  }
+
+  Map<String, dynamic> newTasktoMap() {
+    return {
+      'titleTask': titleTask,
+      'descriptionTask': descriptionTask,
+      'status': status,
+    };
+  }
+
+  factory TaskModel.fromMap(Map<String, dynamic> map) {
+    return TaskModel(
+      idTask: map['idTask'],
+      descriptionTask: map['descriptionTask'],
+      titleTask: map['titleTask'],
+      status: map['status'],
+    );
+  }
 }
