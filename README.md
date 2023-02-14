@@ -10,3 +10,4 @@ In this project I use the package SQFLite that provide me the services to create
 <img src="https://github.com/mattbrevis/to_do_list_project/blob/main/assets/project-views/newtask.jpeg?raw=true"> <br>             
 <img src="https://github.com/mattbrevis/to_do_list_project/blob/main/assets/project-views/listtasks.jpeg?raw=true">
 <img src="https://github.com/mattbrevis/to_do_list_project/blob/main/assets/project-views/deletetask.jpeg?raw=true">    
+<img src="https://github.com/mattbrevis/to_do_list_project/blob/main/assets/project-views/filter.jpeg?raw=true">    
