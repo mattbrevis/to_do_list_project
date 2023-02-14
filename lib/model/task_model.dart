@@ -5,28 +5,22 @@ class TaskModel {
    String titleTask;
   String descriptionTask;
   int status; //-PENDING 1-FINISHED - 2-IN PROGRESS
+  String? dateValidity;
 
   TaskModel({
     this.idTask,
     required this.titleTask,
     required this.descriptionTask,
     required this.status,
+    this.dateValidity,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'idTask': idTask,
-      'titleTask': titleTask,
-      'descriptionTask': descriptionTask,
-      'status': status,
-    };
-  }
-
-  Map<String, dynamic> newTasktoMap() {
+  Map<String, dynamic> tasktoMap() {
     return {
       'titleTask': titleTask,
       'descriptionTask': descriptionTask,
       'status': status,
+      'dateValidity': dateValidity
     };
   }
 
@@ -36,6 +30,7 @@ class TaskModel {
       descriptionTask: map['descriptionTask'],
       titleTask: map['titleTask'],
       status: map['status'],
+      dateValidity: map['dateValidity']
     );
   }
 }

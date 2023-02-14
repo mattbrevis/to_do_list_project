@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_list_project/constants/status_task.dart';
 import 'package:to_do_list_project/model/task_model.dart';
 import 'package:to_do_list_project/repository/task_repository.dart';
+import 'package:intl/intl.dart';
 
 class TaskPage extends StatefulWidget {
   final TaskModel? task;
@@ -20,11 +21,12 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   final formKey = GlobalKey<FormState>();
   final taskDescriptionController = TextEditingController();
-  final titleTaskController = TextEditingController();
+  final titleTaskController = TextEditingController();  
+  final dateValidityController = TextEditingController();
   bool isSaving = false;
   int i = 0;
   String titleStatusTask = '';
-
+  bool controlValidity = true;
   void newTask(TaskModel taskModel) async {
     await TaskRepository().newTask(taskModel).then((value) {
       if (value > 0) {
@@ -32,6 +34,10 @@ class _TaskPageState extends State<TaskPage> {
           const SnackBar(content: Text('New task saved!')),
         );
         Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error saving task.')),
+        );
       }
     });
   }
@@ -44,33 +50,46 @@ class _TaskPageState extends State<TaskPage> {
           const SnackBar(content: Text('Task edited!')),
         );
         Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error saving task.')),
+        );
       }
     });
   }
 
   void loadTask() {
-    if (widget.task != null) {
-      titleTaskController.text = widget.task!.titleTask.toUpperCase();
-      taskDescriptionController.text = widget.task!.descriptionTask.toString();
-      titleStatusTask = statusTask[widget.task!.status];
-    } else {
-      titleStatusTask = statusTask.first;
-    }
-    setState(() {});
+    setState(() {
+      if (widget.task != null) {
+        titleTaskController.text = widget.task!.titleTask.toUpperCase();
+        taskDescriptionController.text =
+            widget.task!.descriptionTask.toString();
+        titleStatusTask = statusTask[widget.task!.status];
+        dateValidityController.text = widget.task!.dateValidity.toString();
+        controlValidity =
+            (widget.task == null || widget.task?.dateValidity == null)
+                ? false
+                : true;
+      } else {
+        titleStatusTask = statusTask.first;
+        controlValidity = false;
+      }
+    });
   }
 
   void deleteTask(int idTask) async {
     await TaskRepository().deleteTask(idTask).then((value) {
       if (value > 0) {
         ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Task deleted.')),);
-            Navigator.pop(context);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Error deleting task.')),
-            );
-          }
-          });    
+          const SnackBar(content: Text('Task deleted.')),
+        );
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error deleting task.')),
+        );
+      }
+    });
   }
 
   @override
@@ -85,16 +104,16 @@ class _TaskPageState extends State<TaskPage> {
       body: Form(
         key: formKey,
         child: Container(
-          margin: const EdgeInsets.all(10),
-          child: Column(
+          margin: const EdgeInsets.fromLTRB(20, 10, 30, 0),
+          child: ListView(
             children: [
-              const SizedBox(
-                height: 50,
-              ),
               Container(
-                height: MediaQuery.of(context).size.height * .10,
+                width: 100,
+                height: 100,
+                margin: const EdgeInsets.all(20),
                 decoration: const BoxDecoration(
                     image: DecorationImage(
+                  fit: BoxFit.scaleDown,
                   image: AssetImage("assets/images/taskico.png"),
                 )),
               ),
@@ -116,6 +135,7 @@ class _TaskPageState extends State<TaskPage> {
                     labelStyle: TextStyle(fontSize: 18),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     label: Text('Title'),
+                    floatingLabelStyle: TextStyle(fontSize: 23),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 1),
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -137,8 +157,8 @@ class _TaskPageState extends State<TaskPage> {
                 controller: taskDescriptionController,
                 decoration: const InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'Description',
-                    labelStyle: TextStyle(fontSize: 18),
+                    labelText: 'Description',                    
+                    labelStyle: TextStyle(fontSize: 23),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 1),
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -157,7 +177,7 @@ class _TaskPageState extends State<TaskPage> {
               SizedBox(
                 child: DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                      labelStyle: TextStyle(fontSize: 18),
+                      labelStyle: TextStyle(fontSize: 23),
                       label: Text('Status'),
                       border: OutlineInputBorder()),
                   value: titleStatusTask,
@@ -187,25 +207,48 @@ class _TaskPageState extends State<TaskPage> {
               const SizedBox(
                 height: 25,
               ),
-              Visibility(
-                visible: false, //todo later
-                child: SizedBox(
-                    width: MediaQuery.of(context).size.width * .8,
-                    child: DateTimePicker(
-                      decoration: const InputDecoration(
-                          label: Text('Validity'),
-                          border: OutlineInputBorder()),
-                      initialValue: DateTime.now().toString(),
-                      type: DateTimePickerType.date,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime.now(),
-                      onChanged: (val) {},
-                      validator: (val) {
-                        return null;
-                      },
-                      onSaved: (val) {},
-                    )),
+              Row(
+                children: [
+                  Switch(
+                    value: controlValidity,
+                    activeColor: Colors.greenAccent,
+                    onChanged: (bool value) {
+                      setState(() {
+                        controlValidity = value;
+                        if (value==false){
+                          dateValidityController.text ='';
+                        }else{
+                          dateValidityController.text =DateTime.now().toString();
+                          
+                        }
+                      });
+                    },
+                  ),
+                  const Text('Control Date Validity?'),
+                Container(
+                width: 100,
+                margin: const EdgeInsets.all(10),                
+                child: DateTimePicker(
+                  enabled: controlValidity,
+                  controller: dateValidityController,
+                  dateMask: 'yyyy-MM-dd',                               
+                  type: DateTimePickerType.date,
+                  firstDate: DateTime(2022),
+                  lastDate: DateTime(2100),
+                  onChanged: (val) {},
+                  validator: (val) {
+                    if (controlValidity == true &&
+                        dateValidityController.text.isEmpty) {
+                      return 'Date validity is required if you';
+                    }
+                    return null;
+                  },
+                  onSaved: (val) {},
+                ),
               ),
+                ],
+              ),
+              
             ],
           ),
         ),
@@ -245,46 +288,51 @@ class _TaskPageState extends State<TaskPage> {
               );
             },
           )),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(20),
-        width: MediaQuery.of(context).size.width * .85,
+      bottomNavigationBar: SizedBox(
+        
+        width: 200,
         height: 50,
-        child: ElevatedButton(
-           
-            onPressed: isSaving == true
-                ? null
-                : () async {
-                    setState(() {
-                      isSaving = true;
-                    });
-                    if (formKey.currentState!.validate()) {
-                      final taskModel = TaskModel(
-                          titleTask: titleTaskController.text,
-                          descriptionTask: taskDescriptionController.text,
-                          status: i);
-                      if (widget.task == null) {
-                        newTask(taskModel);
-                      } else {
-                        editTask(taskModel);
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(50, 0, 50, 10),
+          child: ElevatedButton(
+              onPressed: isSaving == true
+                  ? null
+                  : () async {
+                      setState(() {
+                        isSaving = true;
+                      });
+                      if (formKey.currentState!.validate()) {
+
+                      final DateFormat formatter = DateFormat('yyyy-MM-dd');
+                      final String dateFormatted = formatter.format(DateTime.parse(dateValidityController.text));
+                        final taskModel = TaskModel(
+                            titleTask: titleTaskController.text,
+                            descriptionTask: taskDescriptionController.text,
+                            status: i,
+                            dateValidity: controlValidity==true? dateFormatted : null);
+                        if (widget.task == null) {
+                          newTask(taskModel);
+                        } else {
+                          editTask(taskModel);
+                        }
                       }
-                    }
-                    setState(() {
-                      isSaving = false;
-                    });
-                  },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  widget.task == null ? 'New task' : 'Edit Task',
-                  style: const TextStyle(fontSize: 20),
-                ),
-                Icon(
-                  widget.task == null ? Icons.add : Icons.edit,
-                  size: 20,
-                )
-              ],
-            )),
+                      setState(() {
+                        isSaving = false;
+                      });
+                    },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.task == null ? 'New task' : 'Edit Task'                  
+                  ),
+                  Icon(
+                    widget.task == null ? Icons.add : Icons.edit,
+                    size: 20,
+                  )
+                ],
+              )),
+        ),
       ),
     );
   }

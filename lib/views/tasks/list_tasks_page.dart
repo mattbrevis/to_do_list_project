@@ -15,13 +15,29 @@ class ListTaskPage extends StatefulWidget {
 class _ListTaskPageState extends State<ListTaskPage> {
   List<TaskModel> listTasks = [];
   bool isLoading = true;
-
-  void getTasks() async {
-    isLoading = true;
-    listTasks=[];
+  String titleStatusTask = 'ALL TASKS';
+  int i=3;
+  void getTasks() async {    
+    loadPage();
     listTasks = await TaskRepository().getAllTasks() ?? [];
     setState(() {
-      isLoading=false;
+      isLoading = false;
+    });
+  }
+
+  void getSelectedTasks() async {
+    loadPage();
+
+    listTasks = await TaskRepository().getTask(status: i==3? null: i) ?? [];
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void loadPage() {
+    setState(() {
+      isLoading = true;
+      listTasks = [];
     });
   }
 
@@ -35,32 +51,96 @@ class _ListTaskPageState extends State<ListTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('List Task')),
-      body:isLoading==true? const Center(child: CircularProgressIndicator(),) : Container(
-        margin: const EdgeInsets.only(top: 20),
-        
-        child: SingleChildScrollView(
-          
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [                            
-                Container(
-                      height: MediaQuery.of(context).size.height * .20,
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            fit: BoxFit.fitHeight,
-                        image: AssetImage("assets/images/checklist.png"),
-                      )),
+      body: isLoading == true
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              primary: true,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * .20,
+                        decoration: const BoxDecoration(
+                            image: DecorationImage(
+                          fit: BoxFit.fitHeight,
+                          image: AssetImage("assets/images/checklist.png"),
+                        )),
+                      ),
                     ),
-                Visibility(
-                  visible: listTasks.isEmpty,
-                  child: const Text('No tasks recorded yet.', style: TextStyle(fontSize: 20)
-                  ,)),
-                Visibility(
-                  visible: listTasks.isNotEmpty,
-                  child: Expanded(
-                    child: SizedBox(
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: SizedBox(
+                        width: 200,
+                        child: DropdownButtonFormField<int>(
+                          
+                          decoration: const InputDecoration(
+                            
+                              labelStyle: TextStyle(fontSize: 18),
+                              label: Text('Status'),
+                              floatingLabelBehavior: FloatingLabelBehavior.always,
+
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero,
+                                
+                              )),
+                          value: i,
+                          icon: const Icon(Icons.arrow_downward),
+                          alignment: AlignmentDirectional.centerStart,
+                          onChanged: (value) {
+                            setState(() {
+                              if (value == 0) {
+                                titleStatusTask = statusTask[0];
+                                i = 0;
+                              } else if (value == 1) {
+                                titleStatusTask = statusTask[1];
+                                i = 1;
+                              } else if (value == 2) {
+                                i = 2;
+                              } else {
+                                titleStatusTask = 'ALL TASKS';
+                                i = 3;
+                              }
+                            });
+                            getSelectedTasks();
+                          },
+                          items: [
+                            const DropdownMenuItem<int>(
+                              value: 3,
+                              child: Text('ALL TASKS'),
+                            ),
+                            DropdownMenuItem<int>(
+                              value: 0,
+                              child: Text(statusTask[0]),
+                            ),
+                            DropdownMenuItem<int>(
+                              value: 1,
+                              child: Text(statusTask[1]),
+                            ),
+                            DropdownMenuItem<int>(
+                              value: 2,
+                              child: Text(statusTask[2]),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                        visible: listTasks.isEmpty,
+                        child: const Center(
+                          child: Text(
+                            'No tasks recorded yet.',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        )),
+                    Visibility(
+                      visible: listTasks.isNotEmpty,
                       child: ListView.builder(
+                          shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: listTasks.length,
                           itemBuilder: ((context, index) {
@@ -69,8 +149,10 @@ class _ListTaskPageState extends State<ListTaskPage> {
                             switch (listTasks[index].status) {
                               case 0:
                                 statusIndexTask = statusTask[0];
-                                iconIndexedTask = const Icon(Icons.pending_actions_rounded,
-                                    color: Colors.red, size: 50);
+                                iconIndexedTask = const Icon(
+                                    Icons.pending_outlined,
+                                    color: Colors.red,
+                                    size: 40);
                                 break;
                               case 1:
                                 statusIndexTask = statusTask[1];
@@ -79,13 +161,21 @@ class _ListTaskPageState extends State<ListTaskPage> {
                                 break;
                               case 2:
                                 statusIndexTask = statusTask[2];
-                                iconIndexedTask = const Icon(Icons.run_circle_outlined,
-                                    color: Colors.orange, size: 50);
+                                iconIndexedTask = const Icon(
+                                    Icons.work_history_rounded,
+                                    color: Colors.orange,
+                                    size: 50);
                                 break;
                             }
+                            String dtValidity = listTasks[index].dateValidity ==
+                                    null
+                                ? ''
+                                : 'Date Validity: ${listTasks[index].dateValidity.toString()}';
                             return Card(
-                              shape: const RoundedRectangleBorder(),
-                              elevation: 8,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                              ),
+                              elevation: 10,
                               child: ListTile(
                                 onTap: () async {
                                   await Navigator.push(
@@ -96,27 +186,37 @@ class _ListTaskPageState extends State<ListTaskPage> {
                                             )),
                                   );
                                   getTasks();
-                  
                                 },
                                 leading: iconIndexedTask,
-                                title: Text(listTasks[index].titleTask.toUpperCase(),
-                                    style: Theme.of(context).textTheme.titleLarge),
-                                subtitle: Text(
-                                    '${listTasks[index].descriptionTask.toString()} \nSTATUS: $statusIndexTask',
-                                    style: Theme.of(context).textTheme.titleMedium),
+                                title: Text(
+                                    'TITLE: ${listTasks[index].titleTask.toUpperCase()}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge),
+                                subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          listTasks[index]
+                                              .descriptionTask
+                                              .toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium),
+                                      Text(
+                                          'STATUS: $statusIndexTask\n$dtValidity')
+                                    ]),
                                 trailing: const Icon(Icons.edit_note_rounded),
                                 isThreeLine: true,
                               ),
                             );
                           })),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

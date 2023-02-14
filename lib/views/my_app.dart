@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:to_do_list_project/constants/color_theme.dart';
 import 'package:to_do_list_project/constants/routes.dart';
 
-import 'my_home.dart';
+import 'home_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(      
-      title: 'To do List Project',    
+    return MaterialApp(            
       theme: ThemeData(        
         primarySwatch: darkBlue,
-        elevatedButtonTheme: ElevatedButtonThemeData(style: ButtonStyle(shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          
+          style: ButtonStyle(
+            textStyle: MaterialStateProperty.all<TextStyle>(
+              const TextStyle(fontSize: 20),
+            ),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18.0),
             )) )),
