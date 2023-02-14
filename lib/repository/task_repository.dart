@@ -14,7 +14,8 @@ class TaskRepository implements ITaskRepository {
       idTask INTEGER PRIMARY KEY,
       titleTask TEXT,
       descriptionTask TEXT,
-      status INTEGER
+      status INTEGER,
+      dateValidity TEXT
     )
   ''';
 
@@ -33,24 +34,28 @@ class TaskRepository implements ITaskRepository {
   }
 
   @override
-  Future<List<TaskModel>?> getTask(int id, int status) async {
+  Future<List<TaskModel>?> getTask({int? status,String? dateValidity}) async {
+    
+    String statusParam= status==null? '%%' : status.toString();
+    
+
     final db = await DatabaseProvider.internal().database;
     var res = await db?.rawQuery(
-        'SELECT * FROM $TASK_TABLE_NAME WHERE idTask LIKE $id AND status LIKE $status');
+        'SELECT * FROM $TASK_TABLE_NAME WHERE status LIKE ? ',[statusParam]);
     return res?.map((e) => TaskModel.fromMap(e)).toList();
   }
 
   @override
   Future<int> newTask(TaskModel taskModel) async {
     final db = await DatabaseProvider.internal().database;
-    var res = await db?.insert(TASK_TABLE_NAME, taskModel.newTasktoMap());
+    var res = await db?.insert(TASK_TABLE_NAME, taskModel.tasktoMap());
     return res??0;
   }
 
   @override
   Future<int> updateTask(TaskModel taskModel) async {
     final db = await DatabaseProvider.internal().database;
-    var res = await db?.update(TASK_TABLE_NAME, taskModel.toMap(),
+    var res = await db?.update(TASK_TABLE_NAME, taskModel.tasktoMap(),
         where: "idTask = ?", whereArgs: [taskModel.idTask]);
     return res??0;
   }

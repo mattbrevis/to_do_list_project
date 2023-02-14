@@ -9,21 +9,20 @@ class MyHomePage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Colors.indigo,
-                Colors.indigoAccent,
-                Colors.white                
-              ],
-            )
-          ),        
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.white,            
+            Colors.indigoAccent,
+            Colors.indigo,
+          ],
+        )),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Container(
             height: MediaQuery.of(context).size.height * .30,
             decoration: const BoxDecoration(
-              image: DecorationImage(                            
-              fit: BoxFit.contain,                            
+                image: DecorationImage(
+              fit: BoxFit.contain,
               image: AssetImage("assets/images/taskhome.png"),
             )),
           ),
@@ -32,7 +31,12 @@ class MyHomePage extends StatelessWidget {
           ),
           const Text(
             'To Do List App',
-            style: TextStyle(fontSize: 35, color: Colors.white, fontStyle: FontStyle.italic),
+            style: TextStyle
+            (
+              shadows: <Shadow>[
+                Shadow(color: Colors.black, blurRadius: 15,)
+              ],
+                fontSize: 35, color: Colors.white, fontStyle: FontStyle.italic),
             textAlign: TextAlign.center,
           ),
           const SizedBox(
@@ -56,9 +60,9 @@ class MyHomePage extends StatelessWidget {
                         style: TextStyle(fontSize: 25),
                       ),
                       Text(
-                        'You can organize your tasks \nby adding your tasks into separate categories',
-                        style:
-                            TextStyle(fontSize: 13, fontStyle: FontStyle.italic),
+                        'You can organize your tasks \nby adding your tasks into separate categories and include date validity',
+                        style: TextStyle(
+                            fontSize: 13, fontStyle: FontStyle.italic),
                       ),
                     ],
                   ),
@@ -96,7 +100,8 @@ class MyHomePage extends StatelessWidget {
                         ),
                         Text(
                           'You can check all your pending/running/in progress tasks here',
-                          style: TextStyle(fontSize: 13, fontStyle: FontStyle.italic),
+                          style: TextStyle(
+                              fontSize: 13, fontStyle: FontStyle.italic),
                         ),
                       ],
                     ),
