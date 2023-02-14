@@ -105,17 +105,18 @@ class _TaskPageState extends State<TaskPage> {
       body: Form(
         key: formKey,
         child: Container(
-          margin: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-          child: Column(
+          margin: const EdgeInsets.fromLTRB(20, 10, 30, 0),
+          child: ListView(
             children: [
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                    fit: BoxFit.scaleDown,
-                    image: AssetImage("assets/images/taskico.png"),
-                  )),
-                ),
+              Container(
+                width: 100,
+                height: 100,
+                margin: const EdgeInsets.all(20),
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                  fit: BoxFit.scaleDown,
+                  image: AssetImage("assets/images/taskico.png"),
+                )),
               ),
               const SizedBox(
                 height: 10,
@@ -135,6 +136,7 @@ class _TaskPageState extends State<TaskPage> {
                     labelStyle: TextStyle(fontSize: 18),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     label: Text('Title'),
+                    floatingLabelStyle: TextStyle(fontSize: 23),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 1),
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -157,7 +159,7 @@ class _TaskPageState extends State<TaskPage> {
                 decoration: const InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     labelText: 'Description',                    
-                    labelStyle: TextStyle(fontSize: 18),
+                    labelStyle: TextStyle(fontSize: 23),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 1),
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -176,7 +178,7 @@ class _TaskPageState extends State<TaskPage> {
               SizedBox(
                 child: DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                      labelStyle: TextStyle(fontSize: 18),
+                      labelStyle: TextStyle(fontSize: 23),
                       label: Text('Status'),
                       border: OutlineInputBorder()),
                   value: titleStatusTask,
