@@ -302,14 +302,19 @@ class _TaskPageState extends State<TaskPage> {
                         isSaving = true;
                       });
                       if (formKey.currentState!.validate()) {
+                      String? dateFormatted;
+                      if(controlValidity){                      
+                      final formatter = DateFormat('yyyy-MM-dd');
+                       dateFormatted = formatter.format(DateTime.parse(dateValidityController.text));
+                      }
+                      
 
-                      final DateFormat formatter = DateFormat('yyyy-MM-dd');
-                      final String dateFormatted = formatter.format(DateTime.parse(dateValidityController.text));
+
                         final taskModel = TaskModel(
                             titleTask: titleTaskController.text,
                             descriptionTask: taskDescriptionController.text,
                             status: i,
-                            dateValidity: controlValidity==true? dateFormatted : null);
+                            dateValidity: dateFormatted);
                         if (widget.task == null) {
                           newTask(taskModel);
                         } else {
