@@ -39,6 +39,7 @@ dependencies:
   date_time_picker: ^2.1.0
   sqflite: ^2.2.4+1
   path_provider: ^2.0.12
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

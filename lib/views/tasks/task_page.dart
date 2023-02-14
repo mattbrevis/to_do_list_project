@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_list_project/constants/status_task.dart';
 import 'package:to_do_list_project/model/task_model.dart';
 import 'package:to_do_list_project/repository/task_repository.dart';
+import 'package:intl/intl.dart';
 
 class TaskPage extends StatefulWidget {
   final TaskModel? task;
@@ -20,9 +21,7 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   final formKey = GlobalKey<FormState>();
   final taskDescriptionController = TextEditingController();
-  final titleTaskController = TextEditingController();
-  String todayDate =
-      '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
+  final titleTaskController = TextEditingController();  
   final dateValidityController = TextEditingController();
   bool isSaving = false;
   int i = 0;
@@ -219,7 +218,8 @@ class _TaskPageState extends State<TaskPage> {
                         if (value==false){
                           dateValidityController.text ='';
                         }else{
-                          dateValidityController.text =todayDate;
+                          dateValidityController.text =DateTime.now().toString();
+                          
                         }
                       });
                     },
@@ -302,11 +302,14 @@ class _TaskPageState extends State<TaskPage> {
                         isSaving = true;
                       });
                       if (formKey.currentState!.validate()) {
+
+                      final DateFormat formatter = DateFormat('yyyy-MM-dd');
+                      final String dateFormatted = formatter.format(DateTime.parse(dateValidityController.text));
                         final taskModel = TaskModel(
                             titleTask: titleTaskController.text,
                             descriptionTask: taskDescriptionController.text,
                             status: i,
-                            dateValidity: controlValidity==true? dateValidityController.text : null);
+                            dateValidity: controlValidity==true? dateFormatted : null);
                         if (widget.task == null) {
                           newTask(taskModel);
                         } else {

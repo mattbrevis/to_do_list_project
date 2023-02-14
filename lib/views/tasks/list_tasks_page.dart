@@ -189,7 +189,7 @@ class _ListTaskPageState extends State<ListTaskPage> {
                                 },
                                 leading: iconIndexedTask,
                                 title: Text(
-                                    'TITLE :    ${listTasks[index].titleTask.toUpperCase()}',
+                                    'TITLE: ${listTasks[index].titleTask.toUpperCase()}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleLarge),
