@@ -176,39 +176,42 @@ class _ListTaskPageState extends State<ListTaskPage> {
                                 borderRadius: BorderRadius.circular(18.0),
                               ),
                               elevation: 10,
-                              child: ListTile(
-                                onTap: () async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => TaskPage(
-                                              task: listTasks[index],
-                                            )),
-                                  );
-                                  getTasks();
-                                },
-                                leading: iconIndexedTask,
-                                title: Text(
-                                    'TITLE: ${listTasks[index].titleTask.toUpperCase()}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge),
-                                subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          listTasks[index]
-                                              .descriptionTask
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium),
-                                      Text(
-                                          'STATUS: $statusIndexTask\n$dtValidity')
-                                    ]),
-                                trailing: const Icon(Icons.edit_note_rounded),
-                                isThreeLine: true,
+                              child: Container(                                
+                                padding: const EdgeInsets.all(10),
+                                child: ListTile(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TaskPage(
+                                                task: listTasks[index],
+                                              )),
+                                    );
+                                    getTasks();
+                                  },
+                                  leading: iconIndexedTask,
+                                  title: Text(
+                                      'TITLE: ${listTasks[index].titleTask.toUpperCase()}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge),
+                                  subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            listTasks[index]
+                                                .descriptionTask
+                                                .toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium),
+                                        Text(
+                                            'STATUS: $statusIndexTask\n$dtValidity')
+                                      ]),
+                                  trailing: const Icon(Icons.edit_note_rounded),
+                                  isThreeLine: true,
+                                ),
                               ),
                             );
                           })),

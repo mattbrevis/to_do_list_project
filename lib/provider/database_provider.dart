@@ -19,12 +19,6 @@ class DatabaseProvider {
     return _database;    
   }
 
-  // static DatabaseProvider get() {
-  //   return _instance;
-  // }
-
-
-
   Future<Database> initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();        
     String path = join(documentsDirectory.path, "todolist.db");

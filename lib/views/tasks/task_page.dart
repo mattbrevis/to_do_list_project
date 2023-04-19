@@ -21,7 +21,7 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   final formKey = GlobalKey<FormState>();
   final taskDescriptionController = TextEditingController();
-  final titleTaskController = TextEditingController();  
+  final titleTaskController = TextEditingController();
   final dateValidityController = TextEditingController();
   bool isSaving = false;
   int i = 0;
@@ -91,6 +91,11 @@ class _TaskPageState extends State<TaskPage> {
       }
     });
   }
+  @override
+  void dispose() {
+    dateValidityController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -101,6 +106,7 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('Task page')),
       body: Form(
         key: formKey,
         child: Container(
@@ -125,14 +131,14 @@ class _TaskPageState extends State<TaskPage> {
                 style: const TextStyle(fontSize: 30),
               ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
               TextFormField(
                 readOnly: false,
                 controller: titleTaskController,
                 textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(
-                    labelStyle: TextStyle(fontSize: 18),
+                    labelStyle: TextStyle(fontSize: 23),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     label: Text('Title'),
                     floatingLabelStyle: TextStyle(fontSize: 23),
@@ -155,10 +161,12 @@ class _TaskPageState extends State<TaskPage> {
                 maxLines: 5,
                 readOnly: false,
                 controller: taskDescriptionController,
+                
                 decoration: const InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'Description',                    
+                    labelText: 'Description',
                     labelStyle: TextStyle(fontSize: 23),
+                    
                     border: OutlineInputBorder(
                       borderSide: BorderSide(width: 1),
                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -215,40 +223,44 @@ class _TaskPageState extends State<TaskPage> {
                     onChanged: (bool value) {
                       setState(() {
                         controlValidity = value;
-                        if (value==false){
-                          dateValidityController.text ='';
-                        }else{
-                          dateValidityController.text =DateTime.now().toString();
-                          
+                        if (value == false) {
+                          dateValidityController.text = '';
+                        } else {
+                          dateValidityController.text =
+                              DateTime.now().toString();
                         }
                       });
                     },
                   ),
-                  const Text('Control Date Validity?'),
-                Container(
-                width: 100,
-                margin: const EdgeInsets.all(10),                
-                child: DateTimePicker(
-                  enabled: controlValidity,
-                  controller: dateValidityController,
-                  dateMask: 'yyyy-MM-dd',                               
-                  type: DateTimePickerType.date,
-                  firstDate: DateTime(2022),
-                  lastDate: DateTime(2100),
-                  onChanged: (val) {},
-                  validator: (val) {
-                    if (controlValidity == true &&
-                        dateValidityController.text.isEmpty) {
-                      return 'Date validity is required if you';
-                    }
-                    return null;
-                  },
-                  onSaved: (val) {},
-                ),
-              ),
+                  const Text(
+                    'Control Validity?',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Expanded(
+                    child: Container(
+                      width: 100,
+                      margin: const EdgeInsets.all(10),
+                      child: DateTimePicker(
+                        enabled: controlValidity,
+                        controller: dateValidityController,
+                        dateMask: 'yyyy-MM-dd',
+                        type: DateTimePickerType.date,
+                        firstDate: DateTime(2022),
+                        lastDate: DateTime(2100),
+                        onChanged: (val) {},
+                        validator: (val) {
+                          if (controlValidity == true &&
+                              dateValidityController.text.isEmpty) {
+                            return 'Date validity is required if you';
+                          }
+                          return null;
+                        },
+                        onSaved: (val) {},
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              
             ],
           ),
         ),
@@ -270,6 +282,11 @@ class _TaskPageState extends State<TaskPage> {
                     content: const Text("Would you like to delete this task?"),
                     actions: [
                       ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.red
+                          ),
+                        ),
                         child: const Text("Cancel"),
                         onPressed: () {
                           Navigator.pop(context);
@@ -289,7 +306,6 @@ class _TaskPageState extends State<TaskPage> {
             },
           )),
       bottomNavigationBar: SizedBox(
-        
         width: 200,
         height: 50,
         child: Container(
@@ -302,13 +318,12 @@ class _TaskPageState extends State<TaskPage> {
                         isSaving = true;
                       });
                       if (formKey.currentState!.validate()) {
-                      String? dateFormatted;
-                      if(controlValidity){                      
-                      final formatter = DateFormat('yyyy-MM-dd');
-                       dateFormatted = formatter.format(DateTime.parse(dateValidityController.text));
-                      }
-                      
-
+                        String? dateFormatted;
+                        if (controlValidity) {
+                          final formatter = DateFormat('yyyy-MM-dd');
+                          dateFormatted = formatter.format(
+                              DateTime.parse(dateValidityController.text));
+                        }
 
                         final taskModel = TaskModel(
                             titleTask: titleTaskController.text,
@@ -328,9 +343,7 @@ class _TaskPageState extends State<TaskPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    widget.task == null ? 'New task' : 'Edit Task'                  
-                  ),
+                  Text(widget.task == null ? 'New task' : 'Edit Task'),
                   Icon(
                     widget.task == null ? Icons.add : Icons.edit,
                     size: 20,
